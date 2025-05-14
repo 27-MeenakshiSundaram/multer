@@ -2,24 +2,18 @@ const express = require('express');
 const multer = require('multer');
 const app = express();
 const PORT = 3000;
-
-// Make uploads folder publicly accessible
 app.use('/uploads', express.static('uploads'));
-
-// Configure storage for multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // Save in uploads folder
+    cb(null, 'uploads/'); 
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname); // Rename file
+    cb(null, Date.now() + '-' + file.originalname); 
   }
 });
 
-// Initialize multer with the storage config
 const upload = multer({ storage: storage });
 
-// Route to upload a single file
 app.post('/upload', upload.single('file'), (req, res) => {
   try {
     if (!req.file) {
@@ -32,7 +26,6 @@ app.post('/upload', upload.single('file'), (req, res) => {
   }
 });
 
-// Route to upload multiple files (max 3)
 app.post('/uploads', upload.array('file', 3), (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
@@ -45,7 +38,6 @@ app.post('/uploads', upload.array('file', 3), (req, res) => {
   }
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
